@@ -3,6 +3,7 @@ export interface ExpenseItem {
   description: string;
   amount: number;
   category: "Entertainment" | "Groceries" | "Utilities";
+  //Solution has category: string
 }
 
 const ExpenseListItem = ({

@@ -22,10 +22,9 @@ const ExpenseList = () => {
     expenses: ExpenseItem[],
     selectedExpense: ExpenseItem
   ) => {
-    const deletedExpense = expenses.filter(
-      (expense) => expense.id !== selectedExpense.id
+    setExpensesList(
+      expenses.filter((expense) => expense.id !== selectedExpense.id)
     );
-    setExpensesList(deletedExpense);
   };
 
   const filterList = (expenses: ExpenseItem[]) => {
@@ -37,7 +36,7 @@ const ExpenseList = () => {
   };
   return (
     <>
-      <table className='table '>
+      <table className='table table-bordered '>
         <thead>
           <tr>
             <th scope='col'>Description</th>
@@ -55,9 +54,9 @@ const ExpenseList = () => {
               <th>
                 <button
                   onClick={() => {
-                    handleClick(expensesExample, expense);
+                    handleClick(expensesList, expense);
                   }}
-                  className='btn btn-danger'
+                  className='btn btn-outline-danger'
                 >
                   Delete
                 </button>
@@ -69,7 +68,10 @@ const ExpenseList = () => {
           <tr>
             <td>Total</td>
             <td>
-              ${expensesList.reduce((sum, expense) => sum + expense.amount, 0)}
+              $
+              {expensesList
+                .reduce((sum, expense) => sum + expense.amount, 0)
+                .toFixed(2)}
             </td>
             <td></td>
             <td></td>
