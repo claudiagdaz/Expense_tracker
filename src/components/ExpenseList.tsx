@@ -12,16 +12,17 @@ const expensesExample: ExpenseItem[] = [
   { id: 40, description: "Water", amount: 50, category: "Utilities" },
 ];
 
+//const emptyExpenses: ExpenseItem[] = [];
+
 const ExpenseList = () => {
   const [expensesList, setExpensesList] =
     useState<ExpenseItem[]>(expensesExample);
 
-  const [categoryFilter, setCategoryFilter] = useState("All");
+  const [categoryFilter, setCategoryFilter] = useState("Utilities");
 
-  const handleClick = (
-    expenses: ExpenseItem[],
-    selectedExpense: ExpenseItem
-  ) => {
+  if (expensesList.length === 0) return null;
+
+  const onDelete = (expenses: ExpenseItem[], selectedExpense: ExpenseItem) => {
     setExpensesList(
       expenses.filter((expense) => expense.id !== selectedExpense.id)
     );
@@ -54,7 +55,7 @@ const ExpenseList = () => {
               <th>
                 <button
                   onClick={() => {
-                    handleClick(expensesList, expense);
+                    onDelete(expensesList, expense);
                   }}
                   className='btn btn-outline-danger'
                 >
