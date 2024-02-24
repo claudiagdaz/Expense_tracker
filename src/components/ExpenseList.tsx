@@ -1,9 +1,6 @@
 import { useState } from "react";
 import { ExpenseItem } from "./ExpenseListItem";
-
-// export interface ExpenseListProps {
-//   expenses: ExpenseItem[]
-// }
+import ExpenseFilter from "./ExpenseFilter";
 
 const expensesExample: ExpenseItem[] = [
   { id: 10, description: "Milk", amount: 5, category: "Groceries" },
@@ -18,9 +15,18 @@ const ExpenseList = () => {
   const [expensesList, setExpensesList] =
     useState<ExpenseItem[]>(expensesExample);
 
-  const [categoryFilter, setCategoryFilter] = useState("Utilities");
+  const [selectedCategory, setSelectedCategory] = useState("All");
 
   if (expensesList.length === 0) return null;
+
+  // const visibleExpenses = selectedCategory
+  //   ? expensesList.filter((expense) => expense.category === selectedCategory)
+  //   : expensesList;
+
+  const visibleExpenses =
+    selectedCategory === "All"
+      ? expensesList
+      : expensesList.filter((expense) => expense.category === selectedCategory);
 
   const onDelete = (expenses: ExpenseItem[], selectedExpense: ExpenseItem) => {
     setExpensesList(
@@ -28,15 +34,13 @@ const ExpenseList = () => {
     );
   };
 
-  const filterList = (expenses: ExpenseItem[]) => {
-    const filteredExpenses = expenses.filter(
-      (expense) => expense.category === categoryFilter
-    );
-    setExpensesList(filteredExpenses);
-    //setExpensesList(expenses.map(expense => expense.category === categoryFilter ? ...expense : ))
-  };
   return (
     <>
+      <div className='mb-3'>
+        <ExpenseFilter
+          onSelectCategory={(category) => setSelectedCategory(category)}
+        />
+      </div>
       <table className='table table-bordered '>
         <thead>
           <tr>
@@ -47,7 +51,7 @@ const ExpenseList = () => {
           </tr>
         </thead>
         <tbody>
-          {expensesList.map((expense) => (
+          {visibleExpenses.map((expense) => (
             <tr key={expense.id}>
               <th>{expense.description}</th>
               <th>${expense.amount}</th>
@@ -55,7 +59,7 @@ const ExpenseList = () => {
               <th>
                 <button
                   onClick={() => {
-                    onDelete(expensesList, expense);
+                    onDelete(visibleExpenses, expense);
                   }}
                   className='btn btn-outline-danger'
                 >
@@ -70,7 +74,7 @@ const ExpenseList = () => {
             <td>Total</td>
             <td>
               $
-              {expensesList
+              {visibleExpenses
                 .reduce((sum, expense) => sum + expense.amount, 0)
                 .toFixed(2)}
             </td>
@@ -79,33 +83,6 @@ const ExpenseList = () => {
           </tr>
         </tfoot>
       </table>
-      <button
-        className='btn btn-primary'
-        onClick={() => {
-          setCategoryFilter("Utilities");
-          filterList(expensesExample);
-        }}
-      >
-        Utilities
-      </button>
-      <button
-        className='btn btn-primary'
-        onClick={() => {
-          setCategoryFilter("Groceries");
-          filterList(expensesExample);
-        }}
-      >
-        Groceries
-      </button>
-      <button
-        className='btn btn-primary'
-        onClick={() => {
-          setCategoryFilter("Entertainment");
-          filterList(expensesExample);
-        }}
-      >
-        Entertainment
-      </button>
     </>
   );
 };
