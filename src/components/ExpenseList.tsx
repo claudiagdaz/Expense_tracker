@@ -1,27 +1,18 @@
 import { useState } from "react";
 import { ExpenseItem } from "./ExpenseListItem";
 import ExpenseFilter from "./ExpenseFilter";
+import ExpenseForm from "./ExpenseForm";
 
-const expensesExample: ExpenseItem[] = [
-  { id: 10, description: "Milk", amount: 5, category: "Groceries" },
-  { id: 20, description: "Cinema", amount: 15, category: "Entertainment" },
-  { id: 30, description: "Gas", amount: 20, category: "Utilities" },
-  { id: 40, description: "Water", amount: 50, category: "Utilities" },
-];
+interface ExpenseListProps {
+  expenses: ExpenseItem[];
+}
 
-//const emptyExpenses: ExpenseItem[] = [];
-
-const ExpenseList = () => {
-  const [expensesList, setExpensesList] =
-    useState<ExpenseItem[]>(expensesExample);
+const ExpenseList = ({ expenses }: ExpenseListProps) => {
+  const [expensesList, setExpensesList] = useState<ExpenseItem[]>(expenses);
 
   const [selectedCategory, setSelectedCategory] = useState("All");
 
   if (expensesList.length === 0) return null;
-
-  // const visibleExpenses = selectedCategory
-  //   ? expensesList.filter((expense) => expense.category === selectedCategory)
-  //   : expensesList;
 
   const visibleExpenses =
     selectedCategory === "All"
@@ -36,6 +27,16 @@ const ExpenseList = () => {
 
   return (
     <>
+      <div className='mb-3'>
+        <ExpenseForm
+          onSubmit={(newExpense) =>
+            setExpensesList([
+              ...expenses,
+              { ...newExpense, id: expenses.length + 1 },
+            ])
+          }
+        />
+      </div>
       <div className='mb-3'>
         <ExpenseFilter
           onSelectCategory={(category) => setSelectedCategory(category)}
