@@ -2,8 +2,8 @@ export interface ExpenseItem {
   id: number;
   description: string;
   amount: number;
-  category: "Entertainment" | "Groceries" | "Utilities";
-  //Solution has category: string
+  category: string;
+  //Solution has category: string but then on the form you validate the strings
 }
 
 const ExpenseListItem = ({
