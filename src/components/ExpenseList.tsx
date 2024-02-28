@@ -1,47 +1,14 @@
-import { useState } from "react";
 import { ExpenseItem } from "./ExpenseListItem";
-import ExpenseFilter from "./ExpenseFilter";
-import ExpenseForm from "./ExpenseForm";
 
 interface ExpenseListProps {
   expenses: ExpenseItem[];
+  onDelete: (id: number) => void;
 }
 
-const ExpenseList = ({ expenses }: ExpenseListProps) => {
-  const [expensesList, setExpensesList] = useState<ExpenseItem[]>(expenses);
-
-  const [selectedCategory, setSelectedCategory] = useState("All");
-
-  if (expensesList.length === 0) return null;
-
-  const visibleExpenses =
-    selectedCategory === "All"
-      ? expensesList
-      : expensesList.filter((expense) => expense.category === selectedCategory);
-
-  const onDelete = (expenses: ExpenseItem[], selectedExpense: ExpenseItem) => {
-    setExpensesList(
-      expenses.filter((expense) => expense.id !== selectedExpense.id)
-    );
-  };
-
+const ExpenseList = ({ expenses, onDelete }: ExpenseListProps) => {
+  if (expenses.length === 0) return null;
   return (
     <>
-      <div className='mb-3'>
-        <ExpenseForm
-          onSubmit={(newExpense) =>
-            setExpensesList([
-              ...expenses,
-              { ...newExpense, id: expenses.length + 1 },
-            ])
-          }
-        />
-      </div>
-      <div className='mb-3'>
-        <ExpenseFilter
-          onSelectCategory={(category) => setSelectedCategory(category)}
-        />
-      </div>
       <table className='table table-bordered '>
         <thead>
           <tr>
@@ -52,7 +19,7 @@ const ExpenseList = ({ expenses }: ExpenseListProps) => {
           </tr>
         </thead>
         <tbody>
-          {visibleExpenses.map((expense) => (
+          {expenses.map((expense) => (
             <tr key={expense.id}>
               <th>{expense.description}</th>
               <th>${expense.amount}</th>
@@ -60,7 +27,7 @@ const ExpenseList = ({ expenses }: ExpenseListProps) => {
               <th>
                 <button
                   onClick={() => {
-                    onDelete(visibleExpenses, expense);
+                    onDelete(expense.id);
                   }}
                   className='btn btn-outline-danger'
                 >
@@ -75,7 +42,7 @@ const ExpenseList = ({ expenses }: ExpenseListProps) => {
             <td>Total</td>
             <td>
               $
-              {visibleExpenses
+              {expenses
                 .reduce((sum, expense) => sum + expense.amount, 0)
                 .toFixed(2)}
             </td>
